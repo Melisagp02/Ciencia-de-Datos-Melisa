@@ -1,0 +1,226 @@
+---
+title: "Codigo Presentacion Final A. Exploratorio"
+author: "Melisa Garcia y Oscar Molina"
+date: "16/9/2019"
+output: html_document
+---
+
+```{r librerias}
+library(lubridate)
+library(ggplot2)
+
+```
+
+#season-1718_csv
+```{r lectura 1718}
+
+season_1718_csv<-read.table("season-1718_csv.csv", header=T, sep=",", stringsAsFactors = FALSE)
+
+#Creamos una copia para trabajar y modificar en esta y no la original.
+copia_season_1718_csv<-season_1718_csv
+
+```
+
+##Conociendo el dataset
+```{r conociendo data 1718}
+head(copia_season_1718_csv, 10)
+summary(copia_season_1718_csv)
+str(copia_season_1718_csv)
+dim(copia_season_1718_csv)
+```
+
+
+##Limpieza del dataset season_1718_csv
+
+###Formato de la variable no coincide con el tipo
+```{r limpieza 1718}
+# 1.Convertir a Date
+#Date
+copia_season_1718_csv$Date <- dmy(copia_season_1718_csv$Date) 
+class(copia_season_1718_csv$Date)
+
+# 2.Convertir a factor nominal
+#HomeTeam 
+copia_season_1718_csv$HomeTeam<-as.factor(copia_season_1718_csv$HomeTeam)
+class(copia_season_1718_csv$HomeTeam)
+
+#AwayTeam  
+copia_season_1718_csv$AwayTeam<-as.factor(copia_season_1718_csv$AwayTeam)
+class(copia_season_1718_csv$AwayTeam)
+#FTR
+copia_season_1718_csv$FTR<-as.factor(copia_season_1718_csv$FTR)
+class(copia_season_1718_csv$FTR)
+
+#HTR
+copia_season_1718_csv$HTR<-as.factor(copia_season_1718_csv$HTR)
+class(copia_season_1718_csv$HTR)
+
+#Referee 
+copia_season_1718_csv$Referee<-as.factor(copia_season_1718_csv$Referee)
+class(copia_season_1718_csv$Referee)
+
+# 3.Convertir a cuantitativo
+
+
+# 4. Cambio de nombre
+# #	BbMx>2.5
+names(copia_season_1718_csv)[53] <- "BbMx>2.5"
+#	BbAv>2.5
+names(copia_season_1718_csv)[54] <- "BbAv>2.5"
+#	BbMx<2.5- BbMx.2.5.1
+names(copia_season_1718_csv)[55] <- "BbMx<2.5"
+#	BbAv<2.5- BbAv.2.5.1
+names(copia_season_1718_csv)[56] <- "BbAv<2.5"
+
+head(copia_season_1718_csv, 10)
+
+```
+
+
+###Observaciones duplicadas
+
+```{r 1718}
+
+#Revisamos si hay observaciones duplicadas y si hay, devuelve un valor lógico
+length(unique(copia_season_1718_csv$FTHG)) == nrow(copia_season_1718_csv) 
+
+#Para estar seguros de la no existencia de valores duplicados, eliminanos estos de la coia del dataset
+
+#Quitar duplicados
+copia_season_1718_csv [!duplicated(copia_season_1718_csv),]
+
+head(copia_season_1718_csv, 10)
+
+```
+De lo anterior, se puede concluir que no hay observaciones duplicadas
+
+###Valores perdidos
+```{r valPerdidos 1718}
+
+sum(is.na(season_1718_csv))
+
+```
+De lo anterior, se puede concluir que no encontramos valores perdidos
+
+###Errores de digitacion
+```{r error dig 1718}
+library(dplyr)
+grupos_HomeTeam <- group_by(season_1718_csv, HomeTeam)
+summarise(grupos_HomeTeam,num = n())
+
+grupos_AwayTeam <- group_by(season_1718_csv, AwayTeam)
+summarise(grupos_AwayTeam,num = n())
+
+grupos_FTR<- group_by(season_1718_csv, FTR)
+summarise(grupos_FTR,num = n())
+
+grupos_HTR<- group_by(season_1718_csv, HTR)
+summarise(grupos_HTR,num = n())
+
+grupos_Referee<- group_by(season_1718_csv, Referee)
+summarise(grupos_Referee,num = n())
+
+head(copia_season_1718_csv, 10)
+
+```
+De lo anterior, se puede concluir que no encontramos errores de digitación
+
+###Valores inconsistentes
+```{r val inconsis 1718}
+summary(copia_season_1718_csv$Date)
+
+boxplot(copia_season_1718_csv$FTHG, ylab="Total goles equipo local")
+
+boxplot(copia_season_1718_csv$FTAG, ylab="Total goles equipo visitante")
+
+boxplot(copia_season_1718_csv$HTHG, ylab="Goles de medio tiempo eq local")
+
+boxplot(copia_season_1718_csv$HTAG, ylab="Goles de medio tiempo eq visitante")
+
+table(copia_season_1718_csv$HST, copia_season_1718_csv$FTHG, dnn=c("Tiros al arco eq local", "Goles eq local"))
+#¿Cómo es posible que con 0 tiros al arco, se haga 1 gol?
+
+table(copia_season_1718_csv$AST, copia_season_1718_csv$FTAG, dnn=c("Tiros al arco eq visitante", "Goles eq visitante"))
+
+boxplot(copia_season_1718_csv$HS, ylab="")
+
+```
+
+
+###Valores fuera del rango o invalidos
+```{r val fuera rang o inv 1718}
+
+
+```
+
+
+###Valores sin referencia en el diccionario de variables
+```{r val sin ref en dic 1718}
+
+
+```
+
+
+###Separacion de valores de un campo en varios campos
+```{r}
+
+
+```
+
+
+#season-1819_csv
+```{r lectura}
+
+season_1819_csv<-read.table("season-1819_csv.csv", header=T, sep=",", stringsAsFactors = FALSE)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
